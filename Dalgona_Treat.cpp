@@ -1,249 +1,109 @@
-/*      ###########################
-        #  Author : hariom mewada   #
-        #  College : SGSITS       #
-        ###########################
-*/
-#include <bits/stdc++.h>
-// #include<ext/pb_ds/assoc_container.hpp>
-// #include<ext/pb_ds/tree_policy.hpp>
-#define fast_io                       \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL)
-#define int long long int
-#define ld long double
-#define MOD 1000000007
-#define endl '\n'
-#define all(x) (x).begin(), (x).end()
-#define fo(n) for (int i = 0; i < n; i++)
-#define rfo(n) for (int i = n - 1; i >= 0; i--)
-const int mod = 1e9 + 7;
-const int maxn = 2e5 + 5;
-
+#include<bits/stdc++.h>
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace chrono;
-// using namespace __gnu_pbds;
-/// typedef tree<pair<ll,ll>, null_type, less<pair<ll,ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key
-#ifndef Harry
-#define debug(x)       \
-    cerr << #x << " "; \
-    _print(x);         \
-    cerr << endl;
+using namespace __gnu_pbds;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef long double lld;
+#define pb                push_back
+#define ppb               pop_back
+#define pf                push_front
+#define ppf               pop_front
+#define all(x)            (x).begin(),(x).end()
+#define uniq(v)           (v).erase(unique(all(v)),(v).end())
+#define sz(x)             (int)((x).size())
+#define fr                first
+#define sc                second
+#define INF               923456789987654322
+typedef tree<pair<ll,ll>, null_type, less<pair<ll,ll>>, rb_tree_tag, tree_order_statistics_node_update > pbds; // find_by_order, order_of_key
+#ifndef ONLINE_JUDGE
+#define debug(x) cerr << #x <<" "; _print(x); cerr << endl;
 #else
-#define debug(x) ;
+#define debug(x)
 #endif
-#define ff first
-#define ss second
-
-void _print(int t)
-{
-    cerr << t;
+ 
+void _print(ll t) {cerr << t;}
+void _print(int t) {cerr << t;}
+void _print(string t) {cerr << t;}
+void _print(char t) {cerr << t;}
+void _print(lld t) {cerr << t;}
+void _print(double t) {cerr << t;}
+void _print(ull t) {cerr << t;}
+ll msb(ll N){return(64-__builtin_clzll(N)-1);} 
+template <class T, class V> void _print(pair <T, V> p);
+template <class T> void _print(vector <T> v);
+template <class T> void _print(set <T> v);
+template <class T, class V> void _print(map <T, V> v);
+template <class T> void _print(multiset <T> v);
+template <class T, class V> void _print(pair <T, V> p) {cerr << "{"; _print(p.fr); cerr << ","; _print(p.sc); cerr << "}";}
+template <class T> void _print(vector <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
+template <class T> void _print(set <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
+template <class T> void _print(multiset <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
+template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i : v) {_print(i); cerr << " ";} cerr << "]";}
+ll mod_sub(ll a,ll b,ll m){return(((a%m-b%m+m)%m));}
+vector<vector<ll>> adj(2e5+100);
+vector<bool> vis(2e5+100,0);
+vector<ll> dis(2e5+100,0);
+ll MOD=1e9+7;
+ll lcm(ll a,ll b){
+  ll val=__gcd(a,b);
+  return((a*b)/val);
 }
-void _print(string t) { cerr << t; }
-void _print(char t) { cerr << t; }
-void _print(long double t) { cerr << t; }
-void _print(double t) { cerr << t; }
-
-template <class T, class V>
-void _print(pair<T, V> p);
-template <class T>
-void _print(vector<T> v);
-template <class T>
-void _print(set<T> v);
-template <class T, class V>
-void _print(map<T, V> v);
-template <class T>
-void _print(multiset<T> v);
-template <class T, class V>
-void _print(pair<T, V> p)
-{
-    cerr << "{";
-    _print(p.ff);
-    cerr << ",";
-    _print(p.ss);
-    cerr << "}";
+vector<ll> dp(1e5+5,0);
+void Jai_shree_ganesh(ll tt){
+//cout<<"never give up"<<endl;
+//cout<<"play to win"<<endl;
+//cout<<"Case #"<<tt<<": ";
+ll N,k;
+cin>>N>>k;
+vector<ll> v(N);
+ll sum=0;
+for(ll i=0;i<N;i++){
+cin>>v[i];
+sum+=v[i];
 }
-template <class T>
-void _print(vector<T> v)
-{
-    cerr << "[ ";
-    for (T i : v)
-    {
-        _print(i);
-        cerr << " ";
-    }
-    cerr << "]";
+if(sum<k){
+    cout<<0<<"\n";
+    return;
 }
-template <class T>
-void _print(set<T> v)
-{
-    cerr << "[ ";
-    for (T i : v)
-    {
-        _print(i);
-        cerr << " ";
-    }
-    cerr << "]";
-}
-template <class T>
-void _print(multiset<T> v)
-{
-    cerr << "[ ";
-    for (T i : v)
-    {
-        _print(i);
-        cerr << " ";
-    }
-    cerr << "]";
-}
-template <class T, class V>
-void _print(map<T, V> v)
-{
-    cerr << "[ ";
-    for (auto i : v)
-    {
-        _print(i);
-        cerr << " ";
-    }
-    cerr << "]";
-}
-
-bool prime[100005];
-void SieveOfEratosthenes(int n) // O(nloglogn)
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= n; i += p)
-                prime[i] = false;
-        }
-    }
-}
-bool isPrime(int n) // O(sqrt(n))
-{
-    if (n < 2)
-        return false;
-    for (int i = 2; i * i <= n; i++)
-        if (n % i == 0)
-            return false;
-    return true;
-}
-std::vector<int> factors(int n) // O(sqrt(n))
-{
-    std::vector<int> f;
-    for (int i = 2; i * i <= n; i++)
-    {
-        while (n % i == 0)
-        {
-            f.push_back(i);
-            n = n / i;
-        }
-    }
-    if (n > 1)
-        f.push_back(n);
-    return f;
-}
-int gcd(int a, int b) // O(logn)
-{
-    if (!b)
-        return a;
-    return gcd(b, a % b);
-}
-int eulerstotientfunction(int n) // O(sqrt(n))
-{
-    int ans = n;
-    for (int i = 2; i * i <= n; i++)
-    {
-        if (n % i == 0)
-        {
-            while (n % i == 0)
-                n = n / i;
-            ans -= ans / i;
-        }
-    }
-    if (n > 1)
-        ans -= ans / n;
-    return ans;
-}
-using vl = vector<int>;
-vl fact(2e5 + 5, 1);
-int binPow(int a, int b) /// binomial power
-{
-    if (b == 0)
-        return 1;
-    if (b == 1)
-        return a;
-    int ret = binPow(a, b / 2);
-    if (b % 2 == 0)
-        return (ret * ret) % mod;
-    return ((ret * ret) % mod * a) % mod;
-}
-int inv(int a) ////modulo inverse
-{
-    return (binPow(a, mod - 2) % mod + mod) % mod;
-}
-int binom(int a, int b) /// ncr
-{
-    if (b < 0 or a < 0)
-        return 0;
-    return (((fact[a] * inv(fact[b])) % mod * inv(fact[a - b])) % mod + mod) % mod;
-}
-bool isPerfectSquare(int x)
-{
-    // Find floating point value of
-    // square root of x.
-    if (x >= 0)
-    {
-
-        int sr = sqrt(x);
-
-        // if product of square root
-        // is equal, then
-        // return T/F
-        return (sr * sr == x);
-    }
-    // else return false if n<0
-    return false;
-}
-  vector<int>v(31628);
-void solve()
-{
-    int n;
-    cin >> n;
-    map<int,int>mp;
-    if(n==1){
-        mp[1]++;
-    }else if(n==2){
-        mp[3]++;
-        mp[4]++;
-    }
-    else if(n%2){
-      mp[1]+=n-2;
-      mp[2]++;
-      mp[(n+1)/2]++;
-    }
+vector<vector<ll>> dp(N+5,vector<ll>(k+5,0));
+dp[N][0]=1;
+for(ll i=0;i<=N;i++) dp[i][0]=1;
+for(ll i=N-1;i>=0;i--){
+for(ll j=1;j<=k;j++){
+    if((j-v[i]-1)>=0)
+    dp[i][j]=(dp[i+1][j]%MOD-dp[i+1][(j-v[i]-1)]+MOD)%MOD;
     else{
-         mp[1]+=n-1;
-         mp[(n-2)/2]++;
-    }
-    cout<<mp.size()<<endl;
-    for(auto &a:mp){
-        cout<<a.first<<" "<<a.second<<" "<<endl;
+        dp[i][j]=(dp[i+1][j]%MOD);
     }
 }
+ for(ll ii=1;ii<=k;ii++){
+     dp[i][ii]=(dp[i][ii]%MOD+dp[i][ii-1]%MOD)%MOD;
+    }
+}
+//debug(dp)
+cout<<dp[0][k]%MOD<<"\n";
+} 
+ 
 int32_t main()
 {
-    fast_io;
-    int t = 1;
-    cin >> t;
-    while (t--)
-    {
-        solve();
+    #ifndef ONLINE_JUDGE
+    freopen("Input.txt","r",stdin);
+    freopen("Output.txt","w",stdout);
+    freopen("Error.txt", "w", stderr);
+    #endif
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    ll t=1;
+    //cin>>t;
+    for(ll i=1;i<1e5+5;i++){
+        dp[i]=(i*(i+1))/2;
     }
-    //      #ifndef Harry
-    //      cerr << "Time Taken : " << (float)clock() / CLOCKS_PER_SEC << " secs" << endl;
-    //  #endif
-    return 0;
+   // for(ll i=1;i<=1e5;i++) dp[i]+=dp[i-1];
+    for(ll i=1;i<=t;i++)
+    {
+    Jai_shree_ganesh(t); 
+    }
+    return(0);
 }
