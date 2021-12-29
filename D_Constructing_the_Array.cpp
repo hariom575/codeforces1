@@ -131,33 +131,25 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
+void helper(int l,int r,vector<int>&v,int i){
+    if((r-l+1)%2){
+       int mid=(l+r)/2;
+       v[mid]=i;
+       if(r-mid>mid-l){
+           helper(mid+1,r,v,i+1);
+           helper(l,mid-1,v,i+2);
+       }
+    }
+    else{
+        int mid=(r+l-1)/2;
+
+    }
+}
 void solve(){
     int n;
     cin>>n;
-    string s;
-    cin>>s;
-    vector<int>v;
-    for(int i=0;i<n;i++){
-        int k=s[i]-'0';
-        v.push_back(k);
-    }
-    vector<int>prefix(n+1,0);
-    for(int i=1;i<=n;i++){
-        prefix[i]=prefix[i-1]+v[i-1];
-    }
-    for(int i=1;i<=n;i++){
-        prefix[i]-=i;
-    }
-    debug(prefix);
-    map<int,int>m;
-    m[0]++;
-    int cnt=0;
-    for(int i=1;i<=n;i++){
-        if(m.count(prefix[i]))
-         cnt+=m[prefix[i]];
-         m[prefix[i]]++;   
-    }
-    cout<<cnt<<endl;
+    vector<int>v(n+1,0);
+    helper(1,n,v,1);
 }
 int32_t main(){
 	fast_io;

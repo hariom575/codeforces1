@@ -132,32 +132,7 @@ int  binom(int a,int b)///ncr
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
 void solve(){
-    int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    vector<int>v;
-    for(int i=0;i<n;i++){
-        int k=s[i]-'0';
-        v.push_back(k);
-    }
-    vector<int>prefix(n+1,0);
-    for(int i=1;i<=n;i++){
-        prefix[i]=prefix[i-1]+v[i-1];
-    }
-    for(int i=1;i<=n;i++){
-        prefix[i]-=i;
-    }
-    debug(prefix);
-    map<int,int>m;
-    m[0]++;
-    int cnt=0;
-    for(int i=1;i<=n;i++){
-        if(m.count(prefix[i]))
-         cnt+=m[prefix[i]];
-         m[prefix[i]]++;   
-    }
-    cout<<cnt<<endl;
+    
 }
 int32_t main(){
 	fast_io;

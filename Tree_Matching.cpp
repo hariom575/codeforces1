@@ -140,10 +140,13 @@ void  dfs(int node,int par){
     for(int child:tree[node]){
         if(child==par) continue;
         dfs(child,node);
+        sum+=dp[child][1];
+        dp[node][0]+=max(dp[child][1],dp[child][1]);
     }
-    debug(node)
-    debug(dp[node][1])
-    debug(dp[node][0]);
+    for(int child:tree[node]){
+        if(child==par) continue;
+        dp[node][1]=max(dp[node][1],1+dp[child][0]+sum-dp[child][1]);
+    }
 }
 void solve(){
     int n;
@@ -154,7 +157,7 @@ void solve(){
         tree[u].push_back(v);
         tree[v].push_back(u);
     }
-    dfs(1,-1);
+    dfs(1,-1);debug(dp[1][1]);
     cout<<max(dp[1][0],dp[1][1])<<endl;
 }
 int32_t main(){

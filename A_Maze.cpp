@@ -131,38 +131,56 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
-void solve(){
-    int n;
-    cin>>n;
-    string s;
-    cin>>s;
-    vector<int>v;
-    for(int i=0;i<n;i++){
-        int k=s[i]-'0';
-        v.push_back(k);
-    }
-    vector<int>prefix(n+1,0);
-    for(int i=1;i<=n;i++){
-        prefix[i]=prefix[i-1]+v[i-1];
-    }
-    for(int i=1;i<=n;i++){
-        prefix[i]-=i;
-    }
-    debug(prefix);
-    map<int,int>m;
-    m[0]++;
+int dircnt(int x,int y,int n,int m,vector<vector<char>>&v){
     int cnt=0;
-    for(int i=1;i<=n;i++){
-        if(m.count(prefix[i]))
-         cnt+=m[prefix[i]];
-         m[prefix[i]]++;   
+    if(x-1>=0 and v[x-1][y]=='.') cnt++;
+    if(y-1>=0 and v[x][y-1]=='.') cnt++;
+    if(x+1<n and v[x+1][y]=='.') cnt++;
+    if(y+1<n and v[x][y+1]=='.') cnt++;
+    return cnt;
+}
+bool is_valid(int x,int y,int n,int m,vector<vector<char>>&v){
+    if(x<0 || x>=n || y<0 || y>=m || v[x][y]!='.') return false;
+    return true;
+}
+int dx[4]={1,-1,0,0};
+int dy[4]={0,0,1,-1};
+void dfs(int x,int y,int n,int m,vector<vector<char>>&v,int &k){
+     if(k<=0) return;
+    if(dircnt(x,y,n,m,v)!=1) return ;
+    v[x][y]='X';
+    k--;
+    for(int i=0;i<4;i++){
+        int nwx=x+dx[i];
+        int nwy=y+dy[i];
+        if(is_valid(nwx,nwy,n,m,v)){
+            dfs(nwx,nwy,n,m,v,k);
+        }
     }
-    cout<<cnt<<endl;
+}
+void solve(){
+    int n,m,k;
+    cin>>n>>m>>k;
+    vector<vector<char>>v(n,vector<char>(m));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++) cin>>v[i][j];
+    }
+    for(int i=0;i<n;i++){
+           for(int j=0;j<n;j++){
+               if(v[i][j]=='.') dfs(i,j,n,m,v,k);
+           }
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            cout<<v[i][j];
+        }
+        cout<<endl;
+    }
 }
 int32_t main(){
 	fast_io;
     int t=1;
-    cin>>t;
+   // cin>>t;
      while(t--){
         solve();
      }
