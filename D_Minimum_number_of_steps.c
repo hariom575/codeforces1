@@ -12,8 +12,8 @@
 #define MOD 1000000007  
 #define endl '\n'
 #define all(x) (x).begin(), (x).end()
-#define fo(n) for(int i=0;i<n;i++)
-#define rfo(n) for(int i=n-1;i>=0;i--)
+#define fo(i,a,b) for(int i=a;i<b;i++)
+#define rfo(i,a,b) for(int i=b-1;i>=a;i--)
 const int mod=1e9+7;
 const int maxn=2e5+5;
 
@@ -61,7 +61,13 @@ void SieveOfEratosthenes(int n)//O(nloglogn)
                 prime[i] = false; 
         } 
     } 
-}  
+}
+struct cmp {
+	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
+        return true;
+	}
+};
+///set<pair<int,int>,cmp>> segs
 bool isPrime(int n)//O(sqrt(n))
 {
     if(n<2)
@@ -131,37 +137,35 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
-struct cmp {
-	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
-		int lena = a.second - a.first + 1;
-		int lenb = b.second - b.first + 1;
-		if (lena == lenb) return a.first < b.first;
-		return lena > lenb;
-	}
-};
 void solve(){
- int n;
-		cin >> n;
-		set<pair<int, int>, cmp> segs;
-		segs.insert({0, n - 1});
-		vector<int> a(n);
-		for (int i = 1; i <= n; ++i) {
-			pair<int, int> cur = *segs.begin();
-			segs.erase(segs.begin());
-          ///  debug(cur)
-			int id = (cur.first + cur.second) / 2;
-           /// cout<<cur.second<<" "<<endl;
-			a[id] = i;
-			if (cur.first < id) segs.insert({cur.first, id - 1});
-			if (id < cur.second) segs.insert({id + 1, cur.second});
-		}
-		for (auto it : a) cout << it << " ";
-		cout << endl;
+    string s;
+    cin>>s;
+    int a=0;
+    int b=0;
+    for(int i=0;i<n;i++){
+        if(s[i]=='a' and b){
+            int p=binPow(2,a)-1;
+            ans+=p*b;
+            ans%=mod;
+            b=0;
+            a=0;
+        }
+        if(s[i]=='a'){
+            a++;
+        }
+        if(s[i]=='b'){
+            b++;
+        }
+    }
+      int p=binPow(2,a)-1;
+            ans+=p*b;
+            ans%=mod;
+            cout<<ans<<endl;
 }
 int32_t main(){
 	fast_io;
     int t=1;
-    cin>>t;
+  //  cin>>t;
      while(t--){
         solve();
      }

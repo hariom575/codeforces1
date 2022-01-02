@@ -61,7 +61,12 @@ void SieveOfEratosthenes(int n)//O(nloglogn)
                 prime[i] = false; 
         } 
     } 
-}  
+}
+struct cmp {
+	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
+        return true;
+	}
+};
 bool isPrime(int n)//O(sqrt(n))
 {
     if(n<2)
@@ -131,37 +136,35 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
-struct cmp {
-	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
-		int lena = a.second - a.first + 1;
-		int lenb = b.second - b.first + 1;
-		if (lena == lenb) return a.first < b.first;
-		return lena > lenb;
-	}
-};
 void solve(){
  int n;
-		cin >> n;
-		set<pair<int, int>, cmp> segs;
-		segs.insert({0, n - 1});
-		vector<int> a(n);
-		for (int i = 1; i <= n; ++i) {
-			pair<int, int> cur = *segs.begin();
-			segs.erase(segs.begin());
-          ///  debug(cur)
-			int id = (cur.first + cur.second) / 2;
-           /// cout<<cur.second<<" "<<endl;
-			a[id] = i;
-			if (cur.first < id) segs.insert({cur.first, id - 1});
-			if (id < cur.second) segs.insert({id + 1, cur.second});
-		}
-		for (auto it : a) cout << it << " ";
-		cout << endl;
+ cin>>n;
+ vector<int>v(2*n);
+ for(int i=0;i<2*n;i++){
+     cin>>v[i];
+ }
+ int ans=0;
+    for(int i=0;i<2*n;i++){
+        int cnt=0;
+        for(int j=i+1;j<2*n;j++){
+            if(v[j]==v[i]){
+                for(int k=j-1;k>i;k--)
+                {
+                    cnt++;
+                    v[k+1]=v[k];
+                }
+                v[i+1]=v[i];
+                ans+=cnt;
+                break;
+            }
+        }
+    }
+    cout<<ans<<endl;
 }
 int32_t main(){
 	fast_io;
     int t=1;
-    cin>>t;
+  //  cin>>t;
      while(t--){
         solve();
      }

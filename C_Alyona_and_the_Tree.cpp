@@ -47,7 +47,6 @@ template <class T> void _print(set <T> v) {cerr << "[ "; for (T i : v) {_print(i
 template <class T> void _print(multiset <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
 template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i : v) {_print(i); cerr << " ";} cerr << "]";}
 
-
 bool prime[100005];
 void SieveOfEratosthenes(int n)//O(nloglogn) 
 {  
@@ -61,7 +60,12 @@ void SieveOfEratosthenes(int n)//O(nloglogn)
                 prime[i] = false; 
         } 
     } 
-}  
+}
+struct cmp {
+	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
+        return true;
+	}
+};
 bool isPrime(int n)//O(sqrt(n))
 {
     if(n<2)
@@ -131,37 +135,41 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
-struct cmp {
-	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
-		int lena = a.second - a.first + 1;
-		int lenb = b.second - b.first + 1;
-		if (lena == lenb) return a.first < b.first;
-		return lena > lenb;
-	}
-};
+vector<pair<int,int>>tree[maxn];
+int depth[maxn];
+int cnt=0;
+void dfs(int node,int par,vector<int>&a){
+    for(auto child:tree[node]){
+        int c=child.first;
+        int d=child.second;
+        if(c==par) continue;
+        depth[c]=depth[node]+d;
+        dfs(c,node,a);
+        if(depth[c]>a[c]) cnt++;
+    }
+}
 void solve(){
- int n;
-		cin >> n;
-		set<pair<int, int>, cmp> segs;
-		segs.insert({0, n - 1});
-		vector<int> a(n);
-		for (int i = 1; i <= n; ++i) {
-			pair<int, int> cur = *segs.begin();
-			segs.erase(segs.begin());
-          ///  debug(cur)
-			int id = (cur.first + cur.second) / 2;
-           /// cout<<cur.second<<" "<<endl;
-			a[id] = i;
-			if (cur.first < id) segs.insert({cur.first, id - 1});
-			if (id < cur.second) segs.insert({id + 1, cur.second});
-		}
-		for (auto it : a) cout << it << " ";
-		cout << endl;
+    cnt=0;
+    int n;
+    cin>>n;
+    vector<int>a(n+1);
+    for(int i=1;i<=n;i++) cin>>a[i];
+    for(int i=2;i<=n;i++){
+        int v,p;
+        cin>>v>>p;
+        tree[i].push_back({v,p});
+        tree[v].push_back({i,p});
+    }
+    dfs(1,-1,a);
+    for(int i=1;i<=n;i++)
+    cout<<depth[i]<<" ";
+    cout<<cnt<<endl;
+
 }
 int32_t main(){
 	fast_io;
     int t=1;
-    cin>>t;
+  //  cin>>t;
      while(t--){
         solve();
      }

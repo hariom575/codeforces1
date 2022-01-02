@@ -12,8 +12,8 @@
 #define MOD 1000000007  
 #define endl '\n'
 #define all(x) (x).begin(), (x).end()
-#define fo(n) for(int i=0;i<n;i++)
-#define rfo(n) for(int i=n-1;i>=0;i--)
+#define fo(i,a,b) for(int i=a;i<b;i++)
+#define rfo(i,a,b) for(int i=b-1;i>=a;i--)
 const int mod=1e9+7;
 const int maxn=2e5+5;
 
@@ -61,7 +61,13 @@ void SieveOfEratosthenes(int n)//O(nloglogn)
                 prime[i] = false; 
         } 
     } 
-}  
+}
+struct cmp {
+	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
+        return true;
+	}
+};
+///set<pair<int,int>,cmp>> segs
 bool isPrime(int n)//O(sqrt(n))
 {
     if(n<2)
@@ -131,37 +137,46 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
-struct cmp {
-	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
-		int lena = a.second - a.first + 1;
-		int lenb = b.second - b.first + 1;
-		if (lena == lenb) return a.first < b.first;
-		return lena > lenb;
-	}
-};
+vector<int>graph[50001];
+vector<vector<int>>dp(50001,vector<int>(501,0));
+int ans=0;
+int k;
+int n;
+void dfs(int u,int p){
+    dp[u][0]=1;
+    for(int v:graph[u]){
+        if(v==p) continue;
+        dfs(v,u);
+        for(int i=1;i<=k;i++){
+            dp[u][i]+=dp[v][i-1];
+        }
+    }
+    ans+=dp[u][k];
+    int tot=0;
+    for(int v:graph[u]){
+        if(v==p) continue;
+        for(int x=1;x<=k-1;x++){
+            tot+=(dp[v][x-1]*(dp[u][k-x]-dp[v][k-x-1]));
+        }
+    }
+    tot/=2;
+    ans+=tot;
+}
 void solve(){
- int n;
-		cin >> n;
-		set<pair<int, int>, cmp> segs;
-		segs.insert({0, n - 1});
-		vector<int> a(n);
-		for (int i = 1; i <= n; ++i) {
-			pair<int, int> cur = *segs.begin();
-			segs.erase(segs.begin());
-          ///  debug(cur)
-			int id = (cur.first + cur.second) / 2;
-           /// cout<<cur.second<<" "<<endl;
-			a[id] = i;
-			if (cur.first < id) segs.insert({cur.first, id - 1});
-			if (id < cur.second) segs.insert({id + 1, cur.second});
-		}
-		for (auto it : a) cout << it << " ";
-		cout << endl;
+  cin>>n>>k;
+  for(int i=1;i<n;i++){
+      int u,v;
+      cin>>u>>v;
+      graph[u].push_back(v);
+      graph[v].push_back(u);
+  }
+  dfs(1,-1);
+  cout<<ans<<endl;
 }
 int32_t main(){
 	fast_io;
     int t=1;
-    cin>>t;
+  //  cin>>t;
      while(t--){
         solve();
      }

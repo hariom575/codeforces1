@@ -61,7 +61,12 @@ void SieveOfEratosthenes(int n)//O(nloglogn)
                 prime[i] = false; 
         } 
     } 
-}  
+}
+struct cmp {
+	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
+        return true;
+	}
+};
 bool isPrime(int n)//O(sqrt(n))
 {
     if(n<2)
@@ -131,32 +136,44 @@ int  binom(int a,int b)///ncr
     if (b < 0 or a < 0)return 0;
     return (((fact[a] * inv(fact[b]))%mod * inv(fact[a - b]))%mod + mod)%mod;
 }
-struct cmp {
-	bool operator() (const pair<int, int> &a, const pair<int, int> &b) const {
-		int lena = a.second - a.first + 1;
-		int lenb = b.second - b.first + 1;
-		if (lena == lenb) return a.first < b.first;
-		return lena > lenb;
-	}
-};
 void solve(){
- int n;
-		cin >> n;
-		set<pair<int, int>, cmp> segs;
-		segs.insert({0, n - 1});
-		vector<int> a(n);
-		for (int i = 1; i <= n; ++i) {
-			pair<int, int> cur = *segs.begin();
-			segs.erase(segs.begin());
-          ///  debug(cur)
-			int id = (cur.first + cur.second) / 2;
-           /// cout<<cur.second<<" "<<endl;
-			a[id] = i;
-			if (cur.first < id) segs.insert({cur.first, id - 1});
-			if (id < cur.second) segs.insert({id + 1, cur.second});
-		}
-		for (auto it : a) cout << it << " ";
-		cout << endl;
+    int n;
+    cin>>n;
+    map<string,vector<int>>m;
+    vector<string>ans(n);
+    for(int i=0;i<n;i++){
+        string s;
+        cin>>s;
+        ans[i]=s;
+        m[s].push_back(i);
+    }
+    int cnt=0;
+    for(auto &a:m){
+        while (a.second.size()>1)
+        {
+            int b=(a.second).back();
+            string s=a.first;
+            a.second.pop_back();
+            for(int i=0;i<4;i++){
+                bool h=false;
+                for(int j=0;j<=9;j++){
+                    s[i]=j+'0';
+                    if(!m.count(s)){
+                        m[s].push_back(b);
+                        ans[b]=s;
+                        cnt++;
+                        h=true;
+                        break;
+                    }
+                }
+                if(h)
+                break;
+            }
+        }
+    }
+    cout<<cnt<<endl;
+    for(auto &a:ans)
+    cout<<a<<endl;
 }
 int32_t main(){
 	fast_io;
